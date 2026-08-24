@@ -65,4 +65,4 @@ build/debug/NowPlayingBar.app
 ./scripts/test-preferences-layout.sh
 ```
 
-[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC_BY--NC--SA_4.0-E57373)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+<a href="https://github.com/Marguerite68/macOS-Now-Playing-Menu-Bar-App">NowPlayingBar</a> © 2026 by <a href="https://github.com/Marguerite68">Marguerite</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a><img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;"><img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;"><img src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;"><img src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;">
