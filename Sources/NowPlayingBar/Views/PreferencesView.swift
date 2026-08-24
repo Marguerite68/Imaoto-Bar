@@ -4,9 +4,13 @@ struct PreferencesView: View {
     @ObservedObject var settings: AppSettings
     @ObservedObject var manager: NowPlayingManager
     @ObservedObject var audioQualityManager: AudioQualityManager
+    @ObservedObject var launchAtLoginManager: LaunchAtLoginManager
+    @State private var selectedTab: PreferencesTab = .display
 
     var body: some View {
-        TabView {
+        Group {
+            switch selectedTab {
+            case .display:
             DisplayPreferencesView(
                 settings: settings,
                 mediaInfo: manager.mediaInfo,
@@ -14,18 +18,46 @@ struct PreferencesView: View {
             )
                 .padding(.horizontal, 20)
                 .padding(.bottom, 20)
-                .tabItem {
-                    Label("显示", systemImage: "menubar.rectangle")
-                }
 
-            AboutPreferencesView()
+            case .general:
+                GeneralPreferencesView(launchAtLoginManager: launchAtLoginManager)
+                    .padding(20)
+
+            case .about:
+                AboutPreferencesView()
                 .padding(.horizontal, 20)
                 .padding(.bottom, 20)
-                .tabItem {
-                    Label("关于", systemImage: "info.circle")
-                }
+            }
         }
         .frame(width: 540, height: 500)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Picker("设置页面", selection: $selectedTab) {
+                    ForEach(PreferencesTab.allCases) { tab in
+                        Text(tab.title).tag(tab)
+                    }
+                }
+                .labelsHidden()
+                .pickerStyle(.segmented)
+                .frame(width: 210)
+            }
+        }
+    }
+}
+
+private enum PreferencesTab: CaseIterable, Identifiable {
+    case display
+    case general
+    case about
+
+    var id: Self { self }
+
+    var title: String {
+        switch self {
+        case .display: "显示"
+        case .general: "通用"
+        case .about: "关于"
+        }
     }
 }
 
@@ -292,7 +324,39 @@ private struct DisplayPreferencesView: View {
     )
 }
 
+private struct GeneralPreferencesView: View {
+    @ObservedObject var launchAtLoginManager: LaunchAtLoginManager
+
+    var body: some View {
+        Form {
+            Section("通用") {
+                Toggle(
+                    "开机自启",
+                    isOn: Binding(
+                        get: { launchAtLoginManager.isEnabled },
+                        set: { launchAtLoginManager.setEnabled($0) }
+                    )
+                )
+
+                if let errorMessage = launchAtLoginManager.errorMessage {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+            }
+        }
+        .formStyle(.grouped)
+        .onAppear {
+            launchAtLoginManager.refresh()
+        }
+    }
+}
+
 private struct AboutPreferencesView: View {
+    private let repositoryURL = URL(
+        string: "https://github.com/Marguerite68/macOS-Now-Playing-Menu-Bar-App"
+    )!
+
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: "music.note.list")
@@ -303,6 +367,20 @@ private struct AboutPreferencesView: View {
             Text("Version 0.1.0")
                 .foregroundStyle(.secondary)
             Text("原生、轻量的 macOS 菜单栏媒体信息工具")
+                .font(.callout)
+                .foregroundStyle(.secondary)
+
+            Link(destination: repositoryURL) {
+                Label("GitHub", systemImage: "chevron.left.forwardslash.chevron.right")
+                    .labelStyle(.iconOnly)
+                    .font(.title3)
+                    .frame(width: 30, height: 30)
+            }
+            .buttonStyle(.borderless)
+            .help("在 GitHub 中打开仓库")
+            .accessibilityLabel("在 GitHub 中打开 NowPlayingBar 仓库")
+
+            (Text("Made with ") + Text("❤️") + Text(" by Marguerite"))
                 .font(.callout)
                 .foregroundStyle(.secondary)
         }

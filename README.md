@@ -1,5 +1,9 @@
 # NowPlayingBar
 
+[![Platform](https://img.shields.io/badge/Platform-macOS-000000?logo=apple&logoColor=white)](https://www.apple.com/macos/)
+[![Language](https://img.shields.io/badge/Language-Swift-F05138?logo=swift&logoColor=white)](https://www.swift.org/)
+[![License](https://img.shields.io/badge/License-CC_BY--NC--SA_4.0-E57373)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 一个原生 macOS 菜单栏应用：在菜单栏中显示当前正在播放的歌曲信息，让你无需切换到播放器也能快速查看曲目与歌手。
 
 > **开发中（Work in Progress）**
@@ -61,20 +65,4 @@ build/debug/NowPlayingBar.app
 ./scripts/test-preferences-layout.sh
 ```
 
-内存回归检查可使用：
-
-```bash
-./scripts/memory-smoke.sh
-```
-
-## 许可协议
-
-本项目采用 [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International（CC BY-NC-SA 4.0）](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans) 协议发布。
-
-使用、复制、修改或再发布本项目时，必须遵守该协议：
-
-- **署名（BY）**：保留对原项目及作者的恰当署名。
-- **非商业性使用（NC）**：不得将本项目或其衍生内容用于商业目的。
-- **相同方式共享（SA）**：发布衍生作品时，须以相同的 CC BY-NC-SA 协议授权。
-
-本 README 仅为便于理解的摘要；完整且具有约束力的条款请以 [CC BY-NC-SA 4.0 正式许可文本](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.zh-hans) 为准。
+[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC_BY--NC--SA_4.0-E57373)](https://creativecommons.org/licenses/by-nc-sa/4.0/)

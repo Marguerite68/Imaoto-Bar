@@ -6,6 +6,7 @@ final class StatusBarController: NSObject, ObservableObject {
     private let manager: NowPlayingManager
     private let settings: AppSettings
     private let audioQualityManager: AudioQualityManager
+    private let launchAtLoginManager: LaunchAtLoginManager
     private let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     private let statusItemContentView = StatusItemContentView()
     private let detailsPanel: DetailsPanelController
@@ -15,11 +16,13 @@ final class StatusBarController: NSObject, ObservableObject {
     init(
         manager: NowPlayingManager,
         settings: AppSettings,
-        audioQualityManager: AudioQualityManager
+        audioQualityManager: AudioQualityManager,
+        launchAtLoginManager: LaunchAtLoginManager
     ) {
         self.manager = manager
         self.settings = settings
         self.audioQualityManager = audioQualityManager
+        self.launchAtLoginManager = launchAtLoginManager
         detailsPanel = DetailsPanelController(
             manager: manager,
             settings: settings,
@@ -128,7 +131,8 @@ final class StatusBarController: NSObject, ObservableObject {
             preferencesWindowController = PreferencesWindowController(
                 settings: settings,
                 manager: manager,
-                audioQualityManager: audioQualityManager
+                audioQualityManager: audioQualityManager,
+                launchAtLoginManager: launchAtLoginManager
             )
         }
 
@@ -149,18 +153,21 @@ private final class PreferencesWindowController: NSWindowController {
     init(
         settings: AppSettings,
         manager: NowPlayingManager,
-        audioQualityManager: AudioQualityManager
+        audioQualityManager: AudioQualityManager,
+        launchAtLoginManager: LaunchAtLoginManager
     ) {
         let rootView = PreferencesView(
             settings: settings,
             manager: manager,
-            audioQualityManager: audioQualityManager
+            audioQualityManager: audioQualityManager,
+            launchAtLoginManager: launchAtLoginManager
         )
         let hostingController = NSHostingController(rootView: rootView)
         let window = NSWindow(contentViewController: hostingController)
 
         window.title = "NowPlayingBar 偏好设置"
         window.styleMask = [.titled, .closable, .miniaturizable]
+        window.toolbarStyle = .unified
         window.isReleasedWhenClosed = false
         window.setContentSize(NSSize(width: 540, height: 500))
         window.center()
