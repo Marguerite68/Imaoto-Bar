@@ -1,4 +1,4 @@
-# NowPlayingBar
+# Imaoto-Bar
 
 [![Platform](https://img.shields.io/badge/Platform-macOS-000000?logo=apple&logoColor=white)](https://www.apple.com/macos/)
 [![Language](https://img.shields.io/badge/Language-Swift-F05138?logo=swift&logoColor=white)](https://www.swift.org/)
@@ -65,4 +65,4 @@ build/debug/NowPlayingBar.app
 ./scripts/test-preferences-layout.sh
 ```
 
-<a href="https://github.com/Marguerite68/macOS-Now-Playing-Menu-Bar-App">NowPlayingBar</a> © 2026 by <a href="https://github.com/Marguerite68">Marguerite</a> is licensed under <a href="https://polyformproject.org/licenses/noncommercial/1.0.0/">PolyForm Noncommercial License 1.0.0</a>.
+<a href="https://github.com/Marguerite68/Imaoto-Bar">Imaoto-Bar</a> © 2026 by <a href="https://github.com/Marguerite68">Marguerite</a> is licensed under <a href="https://polyformproject.org/licenses/noncommercial/1.0.0">PolyForm Noncommercial License 1.0.0</a>.
