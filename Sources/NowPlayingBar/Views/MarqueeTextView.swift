@@ -14,11 +14,18 @@ private struct MarqueeRenderState: Equatable {
     let fontWeight: MenuBarFontWeight
 }
 
+private struct TemplateTextRenderState: Equatable {
+    let text: String
+    let minimumWidth: CGFloat
+    let fontWeight: MenuBarFontWeight
+}
+
 @MainActor
 final class MarqueeLayerView: NSView {
     private static let animationKey = "NowPlayingBar.marquee"
-    private let textLayer = CATextLayer()
+    private let textImageView = NSImageView()
     private var renderState: MarqueeRenderState?
+    private var templateRenderState: TemplateTextRenderState?
     private var needsAnimationRestart = false
 
     override init(frame frameRect: NSRect) {
@@ -26,17 +33,10 @@ final class MarqueeLayerView: NSView {
         wantsLayer = true
         layer?.masksToBounds = true
 
-        textLayer.alignmentMode = .left
-        textLayer.contentsScale = NSScreen.main?.backingScaleFactor ?? 2
-        textLayer.font = NSFont.systemFont(
-            ofSize: MenuBarLayout.fontSize,
-            weight: .regular
-        )
-        textLayer.fontSize = MenuBarLayout.fontSize
-        textLayer.foregroundColor = NSColor.labelColor.cgColor
-        textLayer.isWrapped = false
-        textLayer.truncationMode = .none
-        layer?.addSublayer(textLayer)
+        textImageView.imageAlignment = .alignLeft
+        textImageView.imageScaling = .scaleNone
+        textImageView.wantsLayer = true
+        addSubview(textImageView)
     }
 
     @available(*, unavailable)
@@ -61,38 +61,34 @@ final class MarqueeLayerView: NSView {
         let renderedText = renderState.shouldScroll
             ? contentLayout.renderedText
             : renderState.title
-        let textWidth = max(
-            bounds.width,
-            TextMeasurer.width(
-                of: renderedText,
+        let newTemplateRenderState = TemplateTextRenderState(
+            text: renderedText,
+            minimumWidth: bounds.width,
+            fontWeight: renderState.fontWeight
+        )
+        if newTemplateRenderState != templateRenderState {
+            templateRenderState = newTemplateRenderState
+            textImageView.image = MenuBarTemplateImageRenderer.textImage(
+                text: renderedText,
                 font: .systemFont(
                     ofSize: MenuBarLayout.fontSize,
                     weight: renderState.fontWeight.nsWeight
-                )
+                ),
+                height: 17,
+                minimumWidth: bounds.width
             )
-        )
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
-        textLayer.string = renderedText
-        textLayer.frame = CGRect(
+        }
+        let textWidth = textImageView.image?.size.width ?? bounds.width
+        textImageView.frame = CGRect(
             x: 0,
             y: floor((bounds.height - 17) / 2),
             width: textWidth,
             height: 17
         )
-        CATransaction.commit()
 
         if needsAnimationRestart {
             installAnimationIfNeeded()
         }
-    }
-
-    override func viewDidChangeEffectiveAppearance() {
-        super.viewDidChangeEffectiveAppearance()
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
-        textLayer.foregroundColor = NSColor.labelColor.cgColor
-        CATransaction.commit()
     }
 
     func update(with presentation: StatusBarPresentation) {
@@ -110,11 +106,8 @@ final class MarqueeLayerView: NSView {
         guard newState != renderState else { return }
 
         renderState = newState
+        templateRenderState = nil
         stopAndReset()
-        textLayer.font = NSFont.systemFont(
-            ofSize: MenuBarLayout.fontSize,
-            weight: newState.fontWeight.nsWeight
-        )
         needsLayout = true
 
         if newState.shouldScroll && newState.isPlaying {
@@ -124,10 +117,10 @@ final class MarqueeLayerView: NSView {
     }
 
     func stopAndReset() {
-        textLayer.removeAnimation(forKey: Self.animationKey)
+        textImageView.layer?.removeAnimation(forKey: Self.animationKey)
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        textLayer.setAffineTransform(.identity)
+        textImageView.layer?.setAffineTransform(.identity)
         CATransaction.commit()
         needsAnimationRestart = false
     }
@@ -160,7 +153,7 @@ final class MarqueeLayerView: NSView {
         animation.repeatCount = .infinity
         animation.calculationMode = .linear
         animation.isRemovedOnCompletion = false
-        textLayer.add(animation, forKey: Self.animationKey)
+        textImageView.layer?.add(animation, forKey: Self.animationKey)
         needsAnimationRestart = false
     }
 }
@@ -238,7 +231,6 @@ private final class QualityBadgeNSView: NSView {
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
         imageView.imageScaling = .scaleProportionallyDown
-        imageView.contentTintColor = .labelColor
         addSubview(imageView)
     }
 
@@ -260,44 +252,19 @@ private final class QualityBadgeNSView: NSView {
         imageView.frame = bounds
     }
 
-    override func viewDidChangeEffectiveAppearance() {
-        super.viewDidChangeEffectiveAppearance()
-        imageView.contentTintColor = .labelColor
-        needsDisplay = true
-    }
-
     func update(tier: AudioQualityTier?) {
         guard self.tier != tier else { return }
         self.tier = tier
         isHidden = tier == nil
-        imageView.image = tier.flatMap(AudioQualityBadgeAsset.image(for:))
-        imageView.isHidden = imageView.image == nil
+        imageView.image = tier.map { tier in
+            AudioQualityBadgeAsset.image(for: tier)
+                ?? MenuBarTemplateImageRenderer.qualityBadgeImage(
+                    tier: tier,
+                    size: NSSize(width: tier.badgeWidth, height: 14)
+                )
+        }
+        imageView.isHidden = tier == nil
         needsDisplay = true
-    }
-
-    override func draw(_ dirtyRect: NSRect) {
-        super.draw(dirtyRect)
-        guard let tier else { return }
-
-        guard imageView.image == nil else { return }
-
-        let path = NSBezierPath(roundedRect: bounds.insetBy(dx: 0.5, dy: 0.5), xRadius: 3, yRadius: 3)
-        NSColor.labelColor.withAlphaComponent(0.82).setStroke()
-        path.lineWidth = 1
-        path.stroke()
-
-        let paragraph = NSMutableParagraphStyle()
-        paragraph.alignment = .center
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: NSFont.systemFont(ofSize: 7.5, weight: .semibold),
-            .foregroundColor: NSColor.labelColor,
-            .paragraphStyle: paragraph,
-            .kern: 0.2
-        ]
-        (tier.badgeText as NSString).draw(
-            in: CGRect(x: 1, y: 2.2, width: bounds.width - 2, height: 10),
-            withAttributes: attributes
-        )
     }
 }
 

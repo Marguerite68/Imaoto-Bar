@@ -26,6 +26,7 @@ swiftc \
     "$PROJECT_DIR/Sources/NowPlayingBar/Managers/NowPlayingManager.swift" \
     "$PROJECT_DIR/Sources/NowPlayingBar/Managers/AudioQualityManager.swift" \
     "$PROJECT_DIR/Sources/NowPlayingBar/Utilities/MarqueeMetrics.swift" \
+    "$PROJECT_DIR/Sources/NowPlayingBar/Utilities/MenuBarTemplateImageRenderer.swift" \
     "$PROJECT_DIR/Sources/NowPlayingBar/Utilities/AudioQualityBadgeAsset.swift" \
     "$PROJECT_DIR/Sources/NowPlayingBar/Utilities/DetailsPanelLayout.swift" \
     "$PROJECT_DIR/scripts/MenuBarSizingHarness.swift"

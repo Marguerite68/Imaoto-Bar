@@ -1,5 +1,20 @@
 import Darwin
+import AppKit
 import Foundation
+
+private func hasVisiblePixels(_ image: NSImage) -> Bool {
+    guard let tiff = image.tiffRepresentation,
+          let bitmap = NSBitmapImageRep(data: tiff) else { return false }
+
+    for y in 0..<bitmap.pixelsHigh {
+        for x in 0..<bitmap.pixelsWide {
+            if (bitmap.colorAt(x: x, y: y)?.alphaComponent ?? 0) > 0.01 {
+                return true
+            }
+        }
+    }
+    return false
+}
 
 @main
 @MainActor
@@ -121,6 +136,30 @@ struct MenuBarSizingHarness {
             == "Now Playing\(MarqueeContentLayout.loopSeparator)Now Playing",
               seamlessLoopContent.travelDistance > 0 else {
             fputs("FAIL: loop mode does not render adjacent text copies\n", stderr)
+            exit(1)
+        }
+
+        let templateTextImage = MenuBarTemplateImageRenderer.textImage(
+            text: seamlessLoopContent.renderedText,
+            font: .systemFont(ofSize: MenuBarLayout.fontSize, weight: .medium),
+            height: 17
+        )
+        guard templateTextImage.isTemplate,
+              templateTextImage.size.width > 0,
+              templateTextImage.size.height == 17,
+              hasVisiblePixels(templateTextImage) else {
+            fputs("FAIL: marquee text is not rendered as a system-tinted template image\n", stderr)
+            exit(1)
+        }
+
+        let fallbackBadgeImage = MenuBarTemplateImageRenderer.qualityBadgeImage(
+            tier: .lossless,
+            size: CGSize(width: AudioQualityTier.lossless.badgeWidth, height: 14)
+        )
+        guard fallbackBadgeImage.isTemplate,
+              fallbackBadgeImage.size.width == AudioQualityTier.lossless.badgeWidth,
+              hasVisiblePixels(fallbackBadgeImage) else {
+            fputs("FAIL: fallback quality badge is not a system-tinted template image\n", stderr)
             exit(1)
         }
 
