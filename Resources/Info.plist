@@ -5,15 +5,15 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleDisplayName</key>
-    <string>NowPlayingBar</string>
+    <string>ImaotoBar</string>
     <key>CFBundleExecutable</key>
-    <string>NowPlayingBar</string>
+    <string>ImaotoBar</string>
     <key>CFBundleIdentifier</key>
-    <string>com.marguerite.nowplayingbar</string>
+    <string>com.marguerite.imaotobar</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>NowPlayingBar</string>
+    <string>ImaotoBar</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
@@ -27,6 +27,6 @@
     <key>NSHighResolutionCapable</key>
     <true/>
     <key>NSAppleEventsUsageDescription</key>
-    <string>NowPlayingBar 需要读取 Music 或 Spotify 当前播放的歌曲信息。</string>
+    <string>ImaotoBar 需要读取 Music 或 Spotify 当前播放的歌曲信息。</string>
 </dict>
 </plist>

@@ -61,8 +61,8 @@ struct StatusBarPresentation {
 
         let qualityAccessibilityText = audioQuality.map { ", \($0.tier.displayName)" } ?? ""
         accessibilityLabel = fullText.isEmpty
-            ? "NowPlayingBar\(qualityAccessibilityText)"
-            : "NowPlayingBar: \(fullText)\(qualityAccessibilityText)"
+            ? "ImaotoBar\(qualityAccessibilityText)"
+            : "ImaotoBar: \(fullText)\(qualityAccessibilityText)"
 
         if isHidden {
             textViewportWidth = 0

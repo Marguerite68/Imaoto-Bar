@@ -52,7 +52,7 @@ enum AudioQualityUnavailableReason: Equatable, Sendable {
     var explanation: String {
         switch self {
         case .accessibilityPermissionRequired:
-            "NowPlayingBar 需要“辅助功能”权限，才能只读检查 Music 当前播放控件中的音质标识。"
+            "ImaotoBar 需要“辅助功能”权限，才能只读检查 Music 当前播放控件中的音质标识。"
         case .noCurrentMedia:
             "当前没有正在播放、可用于识别音质的 Apple Music 曲目。"
         case .unsupportedSource:
@@ -60,7 +60,7 @@ enum AudioQualityUnavailableReason: Equatable, Sendable {
         case .noPlaybackEvidence:
             "Music 当前播放控件没有提供可验证的音质信息。在大部份情况下，这表明目前播放的曲目为普通音质（最高为AAC 256kbps），也有较小可能性是当前版本的 Music 未向辅助功能公开该信息。"
         case .providerUnavailable:
-            "暂时无法读取 Music 的播放控件。NowPlayingBar 会尝试维持一个最小化的 Music 窗口用于后台识别；若仍失败，可重新打开 Music 后再试。"
+            "暂时无法读取 Music 的播放控件。ImaotoBar 会尝试维持一个最小化的 Music 窗口用于后台识别；若仍失败，可重新打开 Music 后再试。"
         }
     }
 }

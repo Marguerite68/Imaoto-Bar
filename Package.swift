@@ -3,16 +3,16 @@
 import PackageDescription
 
 let package = Package(
-    name: "NowPlayingBar",
+    name: "ImaotoBar",
     platforms: [
         .macOS(.v13)
     ],
     products: [
-        .executable(name: "NowPlayingBar", targets: ["NowPlayingBar"])
+        .executable(name: "ImaotoBar", targets: ["ImaotoBar"])
     ],
     targets: [
         .executableTarget(
-            name: "NowPlayingBar",
+            name: "ImaotoBar",
             path: "Sources/NowPlayingBar",
             resources: [
                 .copy("Resources")

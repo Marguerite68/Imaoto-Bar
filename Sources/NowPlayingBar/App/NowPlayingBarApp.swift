@@ -2,7 +2,7 @@ import SwiftUI
 
 @main
 @MainActor
-struct NowPlayingBarApp: App {
+struct ImaotoBarApp: App {
     @StateObject private var manager: NowPlayingManager
     @StateObject private var settings: AppSettings
     @StateObject private var audioQualityManager: AudioQualityManager

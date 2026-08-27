@@ -25,7 +25,7 @@ final class LaunchAtLoginManager: ObservableObject {
             }
             isEnabled = Self.status == .enabled
             errorMessage = enabled && Self.status == .requiresApproval
-                ? "请在“系统设置 → 通用 → 登录项”中允许 NowPlayingBar 开机自启。"
+                ? "请在“系统设置 → 通用 → 登录项”中允许 ImaotoBar 开机自启。"
                 : nil
         } catch {
             isEnabled = Self.status == .enabled

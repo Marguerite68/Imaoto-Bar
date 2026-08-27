@@ -108,7 +108,7 @@ final class StatusBarController: NSObject, ObservableObject {
         menu.addItem(.separator())
 
         let quitItem = NSMenuItem(
-            title: "退出 NowPlayingBar",
+            title: "退出 ImaotoBar",
             action: #selector(quitApplication),
             keyEquivalent: "q"
         )
@@ -165,9 +165,9 @@ private final class PreferencesWindowController: NSWindowController {
         let hostingController = NSHostingController(rootView: rootView)
         let window = NSWindow(contentViewController: hostingController)
 
-        window.title = "NowPlayingBar 偏好设置"
+        window.title = "ImaotoBar 偏好设置"
         window.styleMask = [.titled, .closable, .miniaturizable]
-        window.toolbarStyle = .unified
+        window.toolbarStyle = .expanded
         window.isReleasedWhenClosed = false
         window.setContentSize(NSSize(width: 540, height: 500))
         window.center()

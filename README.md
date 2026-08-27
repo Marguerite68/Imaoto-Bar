@@ -1,4 +1,4 @@
-# Imaoto-Bar
+# ImaotoBar
 
 [![Platform](https://img.shields.io/badge/Platform-macOS-000000?logo=apple&logoColor=white)](https://www.apple.com/macos/)
 [![Language](https://img.shields.io/badge/Language-Swift-F05138?logo=swift&logoColor=white)](https://www.swift.org/)
@@ -8,7 +8,7 @@
 
 > **开发中（Work in Progress）**
 >
-> NowPlayingBar 仍处于积极开发阶段。功能、界面、支持的播放器及构建方式都可能调整；目前不建议将其用于依赖稳定性的生产环境。
+> ImaotoBar 仍处于积极开发阶段。功能、界面、支持的播放器及构建方式都可能调整；目前不建议将其用于依赖稳定性的生产环境。
 
 ## 功能概览
 
@@ -30,7 +30,7 @@ macOS 目前没有面向第三方应用的统一公开 Now Playing 接口。因�
 
 首次读取播放器信息时，macOS 可能要求授予“自动化”权限。拒绝该权限不会影响应用运行，但应用无法读取相应播放器的媒体信息。
 
-Apple Music 音质识别默认关闭；启用后还需要在“系统设置 → 隐私与安全性 → 辅助功能”中授权 NowPlayingBar。该功能只读取播放控制区对辅助功能公开的文字信息，不操作播放器、不读取音频内容；无法验证时不会猜测音质。
+Apple Music 音质识别默认关闭；启用后还需要在“系统设置 → 隐私与安全性 → 辅助功能”中授权 ImaotoBar。该功能只读取播放控制区对辅助功能公开的文字信息，不操作播放器、不读取音频内容；无法验证时不会猜测音质。
 
 ## 运行项目
 
@@ -45,7 +45,7 @@ Apple Music 音质识别默认关闭；启用后还需要在“系统设置 → 
 生成的应用位于：
 
 ```text
-build/debug/NowPlayingBar.app
+build/debug/ImaotoBar.app
 ```
 
 仅构建应用：

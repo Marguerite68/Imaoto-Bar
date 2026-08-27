@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 struct PreferencesView: View {
@@ -245,7 +246,7 @@ private struct DisplayPreferencesView: View {
 
                 if mediaInfo == nil {
                     Label(
-                        "当前未读取到 Music 或 Spotify。请确认播放器正在运行，并允许 NowPlayingBar 使用“自动化”权限。",
+                        "当前未读取到 Music 或 Spotify。请确认播放器正在运行，并允许 ImaotoBar 使用“自动化”权限。",
                         systemImage: "exclamationmark.triangle"
                     )
                     .font(.caption)
@@ -316,7 +317,7 @@ private struct DisplayPreferencesView: View {
 
     private static let previewMedia = MediaInfo(
         id: "settings-preview",
-        title: "Blinding Lights (Live From NowPlayingBar)",
+        title: "Blinding Lights (Live From ImaotoBar)",
         artist: "The Weeknd",
         album: "After Hours",
         application: .appleMusic,
@@ -354,7 +355,7 @@ private struct GeneralPreferencesView: View {
 
 private struct AboutPreferencesView: View {
     private let repositoryURL = URL(
-        string: "https://github.com/Marguerite68/macOS-Now-Playing-Menu-Bar-App"
+        string: "https://github.com/Marguerite68/Imaoto-Bar"
     )!
 
     var body: some View {
@@ -362,7 +363,7 @@ private struct AboutPreferencesView: View {
             Image(systemName: "music.note.list")
                 .font(.system(size: 44))
                 .foregroundStyle(.tint)
-            Text("NowPlayingBar")
+            Text("ImaotoBar")
                 .font(.title2.weight(.semibold))
             Text("Version 0.1.0")
                 .foregroundStyle(.secondary)
@@ -371,19 +372,37 @@ private struct AboutPreferencesView: View {
                 .foregroundStyle(.secondary)
 
             Link(destination: repositoryURL) {
-                Label("GitHub", systemImage: "chevron.left.forwardslash.chevron.right")
-                    .labelStyle(.iconOnly)
-                    .font(.title3)
-                    .frame(width: 30, height: 30)
+                GitHubIcon()
+                    .frame(width: 24, height: 24)
             }
             .buttonStyle(.borderless)
             .help("在 GitHub 中打开仓库")
-            .accessibilityLabel("在 GitHub 中打开 NowPlayingBar 仓库")
+            .accessibilityLabel("在 GitHub 中打开 ImaotoBar 仓库")
 
             (Text("Made with ") + Text("❤️") + Text(" by Marguerite"))
                 .font(.callout)
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+private struct GitHubIcon: View {
+    private static let image = Bundle.main
+        .url(forResource: "github", withExtension: "svg", subdirectory: "Assets")
+        .flatMap(NSImage.init(contentsOf:))
+
+    var body: some View {
+        Group {
+            if let image = Self.image {
+                Image(nsImage: image)
+                    .resizable()
+                    .renderingMode(.template)
+                    .scaledToFit()
+            } else {
+                Image(systemName: "link")
+            }
+        }
+        .foregroundStyle(.primary)
     }
 }

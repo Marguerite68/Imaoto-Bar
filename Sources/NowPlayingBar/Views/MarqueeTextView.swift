@@ -22,7 +22,7 @@ private struct TemplateTextRenderState: Equatable {
 
 @MainActor
 final class MarqueeLayerView: NSView {
-    private static let animationKey = "NowPlayingBar.marquee"
+    private static let animationKey = "ImaotoBar.marquee"
     private let textImageView = NSImageView()
     private var renderState: MarqueeRenderState?
     private var templateRenderState: TemplateTextRenderState?
@@ -212,7 +212,7 @@ final class StatusItemContentView: NSView {
     func update(with presentation: StatusBarPresentation) {
         let image = NSImage(
             systemSymbolName: presentation.iconName,
-            accessibilityDescription: "NowPlayingBar"
+            accessibilityDescription: "ImaotoBar"
         )
         image?.isTemplate = true
         iconView.image = image

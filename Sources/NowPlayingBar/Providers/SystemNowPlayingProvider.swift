@@ -114,7 +114,7 @@ private enum ArtworkCache {
             in: .userDomainMask
         ).first ?? URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
         let artworkDirectory = baseDirectory.appendingPathComponent(
-            "NowPlayingBar/Artwork",
+            "ImaotoBar/Artwork",
             isDirectory: true
         )
         try? FileManager.default.createDirectory(

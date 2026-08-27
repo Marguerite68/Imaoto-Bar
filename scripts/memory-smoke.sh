@@ -6,21 +6,21 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 "$SCRIPT_DIR/build-app.sh" debug
-open "$PROJECT_DIR/build/debug/NowPlayingBar.app"
+open "$PROJECT_DIR/build/debug/ImaotoBar.app"
 
 APP_PID=""
 for _ in {1..20}; do
-    APP_PID="$(pgrep -x NowPlayingBar || true)"
+    APP_PID="$(pgrep -x ImaotoBar || true)"
     [[ -n "$APP_PID" ]] && break
     sleep 0.25
 done
 
 if [[ -z "$APP_PID" ]]; then
-    echo "FAIL: NowPlayingBar did not launch"
+    echo "FAIL: ImaotoBar did not launch"
     exit 1
 fi
 
-printf '\n>>> Click the NowPlayingBar menu item, then close and reopen it once.\n'
+printf '\n>>> Click the ImaotoBar menu item, then close and reopen it once.\n'
 read -r -p "    [Press Enter when done] " _
 
 BASE_RSS="$(ps -o rss= -p "$APP_PID" | tr -d ' ')"
