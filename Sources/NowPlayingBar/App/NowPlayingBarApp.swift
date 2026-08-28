@@ -11,7 +11,9 @@ struct ImaotoBarApp: App {
 
     init() {
         let settings = AppSettings()
-        let manager = NowPlayingManager(provider: SystemNowPlayingProvider())
+        let manager = NowPlayingManager(
+            provider: SystemNowPlayingProvider(settings: settings)
+        )
         let launchAtLoginManager = LaunchAtLoginManager()
         let audioQualityManager = AudioQualityManager(
             mediaManager: manager,

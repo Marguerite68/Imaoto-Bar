@@ -200,6 +200,17 @@ struct MenuBarSizingHarness {
             fputs("FAIL: audio-quality recognition is not off by default\n", stderr)
             exit(1)
         }
+        guard defaultSettings.mediaSourcePriority == [.appleMusic, .spotify] else {
+            fputs("FAIL: media-source priority does not use the expected default order\n", stderr)
+            exit(1)
+        }
+
+        defaultSettings.mediaSourcePriority = [.spotify, .appleMusic]
+        let reloadedSettings = AppSettings(defaults: isolatedDefaults)
+        guard reloadedSettings.mediaSourcePriority == [.spotify, .appleMusic] else {
+            fputs("FAIL: media-source priority was not persisted\n", stderr)
+            exit(1)
+        }
 
         guard AudioQualityDetailsState(
             recognitionEnabled: false,

@@ -97,6 +97,7 @@ final class AppSettings: ObservableObject {
         static let fontWeight = "fontWeight"
         static let audioQualityRecognitionEnabled = "audioQualityRecognitionEnabled"
         static let didRequestAudioQualityAccessibility = "didRequestAudioQualityAccessibility"
+        static let mediaSourcePriority = "mediaSourcePriority"
     }
 
     @Published var displayMode: MenuBarDisplayMode {
@@ -132,6 +133,15 @@ final class AppSettings: ObservableObject {
             defaults.set(
                 audioQualityRecognitionEnabled,
                 forKey: Key.audioQualityRecognitionEnabled
+            )
+        }
+    }
+
+    @Published var mediaSourcePriority: [MediaSource] {
+        didSet {
+            defaults.set(
+                mediaSourcePriority.map(\.rawValue),
+                forKey: Key.mediaSourcePriority
             )
         }
     }
@@ -181,6 +191,9 @@ final class AppSettings: ObservableObject {
         didRequestAudioQualityAccessibility = defaults.bool(
             forKey: Key.didRequestAudioQualityAccessibility
         )
+        mediaSourcePriority = MediaSource.normalizedPriority(
+            from: defaults.stringArray(forKey: Key.mediaSourcePriority)
+        )
     }
 
     init(
@@ -191,7 +204,8 @@ final class AppSettings: ObservableObject {
         marqueeMode: MarqueeMode = .loop,
         scrollingSpeed: Double = 28,
         fontWeight: MenuBarFontWeight = .medium,
-        audioQualityRecognitionEnabled: Bool = false
+        audioQualityRecognitionEnabled: Bool = false,
+        mediaSourcePriority: [MediaSource] = MediaSource.allCases
     ) {
         defaults = .standard
         displayMode = transientDisplayMode
@@ -203,5 +217,6 @@ final class AppSettings: ObservableObject {
         self.fontWeight = fontWeight
         self.audioQualityRecognitionEnabled = audioQualityRecognitionEnabled
         didRequestAudioQualityAccessibility = false
+        self.mediaSourcePriority = mediaSourcePriority
     }
 }

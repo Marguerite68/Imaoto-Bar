@@ -19,6 +19,7 @@ swiftc \
     "$PROJECT_DIR/Sources/NowPlayingBar/Models/AppSettings.swift" \
     "$PROJECT_DIR/Sources/NowPlayingBar/Models/AudioQuality.swift" \
     "$PROJECT_DIR/Sources/NowPlayingBar/Models/MediaInfo.swift" \
+    "$PROJECT_DIR/Sources/NowPlayingBar/Models/MediaSource.swift" \
     "$PROJECT_DIR/Sources/NowPlayingBar/Models/StatusBarPresentation.swift" \
     "$PROJECT_DIR/Sources/NowPlayingBar/Providers/MediaProvider.swift" \
     "$PROJECT_DIR/Sources/NowPlayingBar/Providers/AudioQualityProvider.swift" \

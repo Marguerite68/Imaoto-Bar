@@ -7,28 +7,33 @@ final class SystemNowPlayingProvider: MediaProvider {
     let identifier = "system-script-providers"
     var onMediaChanged: ((MediaInfo?) -> Void)?
 
-    private let logger = Logger(subsystem: "com.marguerite.nowplayingbar", category: "NowPlaying")
+    private let logger = Logger(subsystem: "com.marguerite.imaotobar", category: "NowPlaying")
     private let pollInterval = Duration.seconds(1)
     private var monitoringTask: Task<Void, Never>?
     private var lastPublishedMedia: MediaInfo?
+    private let settings: AppSettings
 
-    private let sources = [
-        ScriptMediaSource(
-            bundleIdentifier: "com.apple.Music",
+    private let sourcesByIdentifier: [MediaSource: ScriptMediaSource] = [
+        .appleMusic: ScriptMediaSource(
+            identifier: .appleMusic,
             scriptName: "ReadMusic",
             exportsArtwork: true
         ),
-        ScriptMediaSource(
-            bundleIdentifier: "com.spotify.client",
+        .spotify: ScriptMediaSource(
+            identifier: .spotify,
             scriptName: "ReadSpotify",
             exportsArtwork: false
         )
     ]
 
+    init(settings: AppSettings) {
+        self.settings = settings
+    }
+
     func currentMedia() async -> MediaInfo? {
         var pausedCandidate: MediaInfo?
 
-        for source in sources where isApplicationRunning(source.bundleIdentifier) {
+        for source in orderedSources where isApplicationRunning(source.bundleIdentifier) {
             do {
                 guard let mediaInfo = try await readMedia(from: source) else { continue }
 
@@ -44,6 +49,10 @@ final class SystemNowPlayingProvider: MediaProvider {
         }
 
         return pausedCandidate
+    }
+
+    private var orderedSources: [ScriptMediaSource] {
+        settings.mediaSourcePriority.compactMap { sourcesByIdentifier[$0] }
     }
 
     func startMonitoring() {
@@ -102,9 +111,11 @@ final class SystemNowPlayingProvider: MediaProvider {
 }
 
 private struct ScriptMediaSource {
-    let bundleIdentifier: String
+    let identifier: MediaSource
     let scriptName: String
     let exportsArtwork: Bool
+
+    var bundleIdentifier: String { identifier.bundleIdentifier }
 }
 
 private enum ArtworkCache {

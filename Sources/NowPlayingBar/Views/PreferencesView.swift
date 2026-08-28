@@ -21,7 +21,10 @@ struct PreferencesView: View {
                 .padding(.bottom, 20)
 
             case .general:
-                GeneralPreferencesView(launchAtLoginManager: launchAtLoginManager)
+                GeneralPreferencesView(
+                    settings: settings,
+                    launchAtLoginManager: launchAtLoginManager
+                )
                     .padding(20)
 
             case .about:
@@ -326,6 +329,7 @@ private struct DisplayPreferencesView: View {
 }
 
 private struct GeneralPreferencesView: View {
+    @ObservedObject var settings: AppSettings
     @ObservedObject var launchAtLoginManager: LaunchAtLoginManager
 
     var body: some View {
@@ -345,11 +349,118 @@ private struct GeneralPreferencesView: View {
                         .foregroundStyle(.red)
                 }
             }
+
+            Section("媒体识别优先级") {
+                List {
+                    ForEach(
+                        Array(settings.mediaSourcePriority.enumerated()),
+                        id: \.element.id
+                    ) { index, source in
+                        MediaSourcePriorityRow(
+                            source: source,
+                            priority: index + 1
+                        )
+                        .listRowInsets(
+                            EdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8)
+                        )
+                        .listRowBackground(Color.clear)
+                    }
+                    .onMove { sourceOffsets, destinationOffset in
+                        settings.mediaSourcePriority.move(
+                            fromOffsets: sourceOffsets,
+                            toOffset: destinationOffset
+                        )
+                    }
+                }
+                .environment(\.defaultMinListRowHeight, 30)
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .background(.clear)
+                .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+                .frame(height: CGFloat(settings.mediaSourcePriority.count) * 32)
+
+                Text("拖动调整顺序。多个播放器状态相同时，将优先识别排在上方的平台。")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
         .formStyle(.grouped)
         .onAppear {
             launchAtLoginManager.refresh()
         }
+    }
+
+}
+
+private struct MediaSourcePriorityRow: View {
+    let source: MediaSource
+    let priority: Int
+
+    var body: some View {
+        HStack(spacing: 8) {
+            MediaSourceIcon(source: source, applicationURL: applicationURL)
+                .frame(width: 20, height: 20)
+
+            Text(source.displayName)
+                .font(.callout)
+
+            Spacer()
+
+            if applicationURL == nil {
+                Text("未安装")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(.quaternary, in: Capsule())
+            }
+
+            Text("\(priority)")
+                .font(.caption.monospacedDigit())
+                .foregroundStyle(.secondary)
+                .frame(width: 12, alignment: .trailing)
+
+            Image(systemName: "line.3.horizontal")
+                .font(.caption)
+                .foregroundStyle(.tertiary)
+                .accessibilityHidden(true)
+        }
+        .frame(minHeight: 28)
+        .contentShape(Rectangle())
+    }
+
+    private var applicationURL: URL? {
+        guard let url = NSWorkspace.shared.urlForApplication(
+            withBundleIdentifier: source.bundleIdentifier
+        ), FileManager.default.fileExists(atPath: url.path) else { return nil }
+        return url
+    }
+}
+
+private struct MediaSourceIcon: View {
+    let source: MediaSource
+    let applicationURL: URL?
+
+    var body: some View {
+        Group {
+            if let icon = applicationIcon {
+                Image(nsImage: icon)
+                    .resizable()
+                    .scaledToFit()
+            } else {
+                Image(systemName: source.fallbackSymbolName)
+                    .resizable()
+                    .scaledToFit()
+                    .padding(4)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .accessibilityHidden(true)
+    }
+
+    private var applicationIcon: NSImage? {
+        guard let applicationURL else { return nil }
+        return NSWorkspace.shared.icon(forFile: applicationURL.path)
     }
 }
 
