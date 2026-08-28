@@ -55,7 +55,7 @@ build/debug/ImaotoBar.app
 ./scripts/build-app.sh debug
 ```
 
-`Package.swift` 也可在安装 Xcode 后直接打开。项目的构建脚本不依赖完整 Xcode；`SwiftToolchainOverlay.yaml` 仅用于兼容部分 Command Line Tools 环境，不会修改系统工具链。
+项目使用 `scripts/build-app.sh` 作为构建入口，不依赖 Swift Package Manager。请直接打开项目文件夹，并通过上述脚本构建或运行应用；`SwiftToolchainOverlay.yaml` 仅用于兼容部分 Command Line Tools 环境，不会修改系统工具链。
 
 ## 开发与反馈
 

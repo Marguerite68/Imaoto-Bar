@@ -34,6 +34,7 @@ swiftc \
     "${SOURCE_FILES[@]}"
 
 cp "$PROJECT_DIR/Resources/Info.plist" "$APP_DIR/Contents/Info.plist"
+cp "$PROJECT_DIR/Resources/ImaotoBar.icns" "$APP_DIR/Contents/Resources/ImaotoBar.icns"
 cp "$PROJECT_DIR"/Sources/NowPlayingBar/Resources/Scripts/*.applescript "$APP_DIR/Contents/Resources/Scripts/"
 cp "$PROJECT_DIR/Resources/Assets/github.svg" "$APP_DIR/Contents/Resources/Assets/github.svg"
 
