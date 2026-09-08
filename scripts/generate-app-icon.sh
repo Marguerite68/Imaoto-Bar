@@ -26,9 +26,6 @@ swiftc \
 rm -rf "$ICONSET_DIR"
 mkdir -p "$ICONSET_DIR"
 
-sips --resampleHeightWidth 16 16 "$PROJECT_DIR/Resources/Assets/AppIcon.png" --out "$ICONSET_DIR/icon_16x16.png" >/dev/null
-sips --resampleHeightWidth 32 32 "$PROJECT_DIR/Resources/Assets/AppIcon.png" --out "$ICONSET_DIR/icon_32x32.png" >/dev/null
-sips --resampleHeightWidth 64 64 "$PROJECT_DIR/Resources/Assets/AppIcon.png" --out "$ICONSET_DIR/icon_32x32@2x.png" >/dev/null
 sips --resampleHeightWidth 128 128 "$PROJECT_DIR/Resources/Assets/AppIcon.png" --out "$ICONSET_DIR/icon_128x128.png" >/dev/null
 sips --resampleHeightWidth 256 256 "$PROJECT_DIR/Resources/Assets/AppIcon.png" --out "$ICONSET_DIR/icon_128x128@2x.png" >/dev/null
 sips --resampleHeightWidth 512 512 "$PROJECT_DIR/Resources/Assets/AppIcon.png" --out "$ICONSET_DIR/icon_512x512.png" >/dev/null

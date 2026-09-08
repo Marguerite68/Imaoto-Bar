@@ -24,3 +24,4 @@ swiftc \
 rm -rf "$ICONSET_DIR"
 iconutil --convert iconset --output "$ICONSET_DIR" "$PROJECT_DIR/Resources/ImaotoBar.icns"
 "$BUILD_DIR/AppIconShapeHarness" "$ICONSET_DIR/icon_512x512@2x.png"
+node "$SCRIPT_DIR/VerifyAppIconPackage.js" "$PROJECT_DIR/Resources/ImaotoBar.icns"
