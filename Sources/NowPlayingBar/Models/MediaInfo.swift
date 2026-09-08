@@ -16,10 +16,10 @@ enum PlaybackState: String, Sendable {
 
     var displayName: String {
         switch self {
-        case .playing: "播放中"
-        case .paused: "已暂停"
-        case .stopped: "已停止"
-        case .unknown: "未知"
+        case .playing: L10n.text(.playing)
+        case .paused: L10n.text(.paused)
+        case .stopped: L10n.text(.stopped)
+        case .unknown: L10n.text(.unknown)
         }
     }
 }

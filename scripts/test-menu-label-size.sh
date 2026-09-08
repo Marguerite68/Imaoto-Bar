@@ -16,6 +16,7 @@ swiftc \
     -vfsoverlay "$PROJECT_DIR/Resources/SwiftToolchainOverlay.yaml" \
     -module-cache-path "$MODULE_CACHE_DIR" \
     -o "$BUILD_DIR/MenuBarSizingHarness" \
+    "$PROJECT_DIR/Sources/NowPlayingBar/Models/AppLanguage.swift" \
     "$PROJECT_DIR/Sources/NowPlayingBar/Models/AppSettings.swift" \
     "$PROJECT_DIR/Sources/NowPlayingBar/Models/AudioQuality.swift" \
     "$PROJECT_DIR/Sources/NowPlayingBar/Models/MediaInfo.swift" \

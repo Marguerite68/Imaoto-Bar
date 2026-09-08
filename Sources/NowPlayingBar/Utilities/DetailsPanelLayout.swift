@@ -3,8 +3,8 @@ import AppKit
 enum DetailsPanelLayout {
     static let maximumWidth: CGFloat = 390
     static let metadataArtworkSpacing: CGFloat = 16
-    static let idleMessage = "当前没有可读取的媒体"
-    static let idleContentSize: NSSize = {
+    static var idleMessage: String { L10n.text(.noReadableMedia) }
+    static var idleContentSize: NSSize {
         let messageSize = (idleMessage as NSString).size(
             withAttributes: [.font: NSFont.systemFont(ofSize: 13)]
         )
@@ -12,7 +12,7 @@ enum DetailsPanelLayout {
             width: ceil(messageSize.width + 40),
             height: ceil(messageSize.height + 36)
         )
-    }()
+    }
     private static let minimumTextWidth: CGFloat = 130
 
     static func contentSize(
@@ -75,10 +75,10 @@ enum DetailsPanelLayout {
         let captionFont = NSFont.systemFont(ofSize: 11)
         let metadata = [
             (mediaInfo.title, titleFont),
-            (mediaInfo.artist ?? "未知艺术家", bodyFont),
+            (mediaInfo.artist ?? L10n.text(.unknownArtist), bodyFont),
             (mediaInfo.album ?? "", captionFont),
             ("\(mediaInfo.application.rawValue) · \(mediaInfo.playbackState.displayName)", captionFont),
-            (recognitionEnabled ? "未获得音质信息" : "", captionFont)
+            (recognitionEnabled ? L10n.text(.noQualityInfo) : "", captionFont)
         ]
 
         return metadata.map { text, font in

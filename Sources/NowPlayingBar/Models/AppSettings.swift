@@ -10,11 +10,11 @@ enum MenuBarDisplayMode: String, CaseIterable, Identifiable, Sendable {
     var displayName: String {
         switch self {
         case .iconOnly:
-            "仅图标"
+            L10n.text(.iconOnly)
         case .title:
-            "图标 + 歌名"
+            L10n.text(.iconAndTitle)
         case .titleAndArtist:
-            "图标 + 歌名 + 歌手"
+            L10n.text(.iconAndTitleAndArtist)
         }
     }
 
@@ -52,8 +52,8 @@ enum MarqueeMode: String, CaseIterable, Identifiable, Sendable {
 
     var displayName: String {
         switch self {
-        case .loop: "循环"
-        case .pingPong: "来回"
+        case .loop: L10n.text(.loop)
+        case .pingPong: L10n.text(.pingPong)
         }
     }
 }
@@ -68,10 +68,10 @@ enum MenuBarFontWeight: String, CaseIterable, Identifiable, Sendable {
 
     var displayName: String {
         switch self {
-        case .regular: "常规"
-        case .medium: "中等"
-        case .semibold: "半粗"
-        case .bold: "粗体"
+        case .regular: L10n.text(.regular)
+        case .medium: L10n.text(.medium)
+        case .semibold: L10n.text(.semibold)
+        case .bold: L10n.text(.bold)
         }
     }
 }
@@ -98,6 +98,7 @@ final class AppSettings: ObservableObject {
         static let audioQualityRecognitionEnabled = "audioQualityRecognitionEnabled"
         static let didRequestAudioQualityAccessibility = "didRequestAudioQualityAccessibility"
         static let mediaSourcePriority = "mediaSourcePriority"
+        static let language = "appLanguage"
     }
 
     @Published var displayMode: MenuBarDisplayMode {
@@ -144,6 +145,10 @@ final class AppSettings: ObservableObject {
                 forKey: Key.mediaSourcePriority
             )
         }
+    }
+
+    @Published var language: AppLanguage {
+        didSet { defaults.set(language.rawValue, forKey: Key.language) }
     }
 
     var didRequestAudioQualityAccessibility: Bool {
@@ -194,6 +199,8 @@ final class AppSettings: ObservableObject {
         mediaSourcePriority = MediaSource.normalizedPriority(
             from: defaults.stringArray(forKey: Key.mediaSourcePriority)
         )
+        language = defaults.string(forKey: Key.language)
+            .flatMap(AppLanguage.init(rawValue:)) ?? .simplifiedChinese
     }
 
     init(
@@ -205,7 +212,8 @@ final class AppSettings: ObservableObject {
         scrollingSpeed: Double = 28,
         fontWeight: MenuBarFontWeight = .medium,
         audioQualityRecognitionEnabled: Bool = false,
-        mediaSourcePriority: [MediaSource] = MediaSource.allCases
+        mediaSourcePriority: [MediaSource] = MediaSource.allCases,
+        language: AppLanguage = .simplifiedChinese
     ) {
         defaults = .standard
         displayMode = transientDisplayMode
@@ -218,5 +226,6 @@ final class AppSettings: ObservableObject {
         self.audioQualityRecognitionEnabled = audioQualityRecognitionEnabled
         didRequestAudioQualityAccessibility = false
         self.mediaSourcePriority = mediaSourcePriority
+        self.language = language
     }
 }

@@ -6,8 +6,8 @@ enum AudioQualityTier: String, Hashable, Sendable {
 
     var displayName: String {
         switch self {
-        case .lossless: "无损"
-        case .hiResLossless: "高解析无损"
+        case .lossless: L10n.text(.lossless)
+        case .hiResLossless: L10n.text(.hiResLossless)
         }
     }
 
@@ -52,15 +52,15 @@ enum AudioQualityUnavailableReason: Equatable, Sendable {
     var explanation: String {
         switch self {
         case .accessibilityPermissionRequired:
-            "ImaotoBar 需要“辅助功能”权限，才能只读检查 Music 当前播放控件中的音质标识。"
+            L10n.text(.accessibilityPermissionExplanation)
         case .noCurrentMedia:
-            "当前没有正在播放、可用于识别音质的 Apple Music 曲目。"
+            L10n.text(.noCurrentMediaExplanation)
         case .unsupportedSource:
-            "当前媒体来源暂未提供音质识别。识别仅支持 Apple Music。"
+            L10n.text(.unsupportedSourceExplanation)
         case .noPlaybackEvidence:
-            "Music 当前播放控件没有提供可验证的音质信息。在大部份情况下，这表明目前播放的曲目为普通音质（最高为AAC 256kbps），也有较小可能性是当前版本的 Music 未向辅助功能公开该信息。"
+            L10n.text(.noPlaybackEvidenceExplanation)
         case .providerUnavailable:
-            "暂时无法读取 Music 的播放控件。ImaotoBar 会尝试维持一个最小化的 Music 窗口用于后台识别；若仍失败，可重新打开 Music 后再试。"
+            L10n.text(.providerUnavailableExplanation)
         }
     }
 }

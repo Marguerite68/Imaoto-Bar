@@ -1,4 +1,5 @@
 import AppKit
+import Combine
 import SwiftUI
 
 @MainActor
@@ -94,28 +95,28 @@ final class StatusBarController: NSObject, ObservableObject {
         let menu = NSMenu()
 
         let preferencesItem = NSMenuItem(
-            title: "设置…",
+            title: L10n.text(.settings),
             action: #selector(showPreferences),
             keyEquivalent: ","
         )
         preferencesItem.target = self
         preferencesItem.image = NSImage(
             systemSymbolName: "gearshape",
-            accessibilityDescription: "设置"
+            accessibilityDescription: L10n.text(.settings)
         )
         menu.addItem(preferencesItem)
 
         menu.addItem(.separator())
 
         let quitItem = NSMenuItem(
-            title: "退出 ImaotoBar",
+            title: L10n.text(.quit),
             action: #selector(quitApplication),
             keyEquivalent: "q"
         )
         quitItem.target = self
         quitItem.image = NSImage(
             systemSymbolName: "power",
-            accessibilityDescription: "退出"
+            accessibilityDescription: L10n.text(.quit)
         )
         menu.addItem(quitItem)
 
@@ -150,6 +151,7 @@ final class StatusBarController: NSObject, ObservableObject {
 
 @MainActor
 private final class PreferencesWindowController: NSWindowController {
+    private var languageCancellable: AnyCancellable?
     init(
         settings: AppSettings,
         manager: NowPlayingManager,
@@ -165,7 +167,7 @@ private final class PreferencesWindowController: NSWindowController {
         let hostingController = NSHostingController(rootView: rootView)
         let window = NSWindow(contentViewController: hostingController)
 
-        window.title = "ImaotoBar 偏好设置"
+        window.title = L10n.text(.preferences, language: settings.language)
         window.styleMask = [.titled, .closable, .miniaturizable]
         window.toolbarStyle = .expanded
         window.isReleasedWhenClosed = false
@@ -173,6 +175,10 @@ private final class PreferencesWindowController: NSWindowController {
         window.center()
 
         super.init(window: window)
+
+        languageCancellable = settings.$language.sink { [weak window] language in
+            window?.title = L10n.text(.preferences, language: language)
+        }
     }
 
     @available(*, unavailable)

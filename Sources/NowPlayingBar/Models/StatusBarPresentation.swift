@@ -132,7 +132,7 @@ final class StatusBarPresentationObserver {
             ?? Just<VerifiedAudioQuality?>(nil).eraseToAnyPublisher()
         let playback = Publishers.CombineLatest(manager.$mediaInfo, qualityPublisher)
 
-        cancellable = Publishers.CombineLatest3(
+        let presentationPublisher = Publishers.CombineLatest3(
             playback,
             displaySettings,
             animationSettings
@@ -150,6 +150,12 @@ final class StatusBarPresentationObserver {
                 audioQuality: playback.1
             )
         }
+
+        // The visible title is media metadata, but its accessibility label may
+        // include localized audio-quality text. Re-publish it when language changes.
+        cancellable = presentationPublisher
+            .combineLatest(settings.$language)
+            .map { presentation, _ in presentation }
         .sink(receiveValue: onChange)
     }
 }

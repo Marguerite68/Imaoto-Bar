@@ -29,7 +29,7 @@ struct NowPlayingDetailsView: View {
                     Text(mediaInfo.title)
                         .font(.headline)
                         .lineLimit(2)
-                    Text(mediaInfo.artist ?? "未知艺术家")
+                    Text(mediaInfo.artist ?? L10n.text(.unknownArtist))
                         .foregroundStyle(.secondary)
                     if let album = mediaInfo.album, !album.isEmpty {
                         Text(album)
@@ -97,7 +97,7 @@ struct NowPlayingDetailsView: View {
         _ reason: AudioQualityUnavailableReason
     ) -> some View {
         HStack(spacing: 6) {
-            Text(reason == .noPlaybackEvidence ? "高质量" : "未获得音质信息")
+            Text(reason == .noPlaybackEvidence ? L10n.text(.highQuality) : L10n.text(.noQualityInfo))
                 .font(.caption)
                 .foregroundStyle(.secondary)
             Button {
@@ -108,7 +108,7 @@ struct NowPlayingDetailsView: View {
             }
             .buttonStyle(.plain)
             .foregroundStyle(.secondary)
-            .accessibilityLabel("为什么没有音质信息")
+            .accessibilityLabel(L10n.text(.whyNoQualityInfo))
             .popover(isPresented: $showsQualityExplanation, arrowEdge: .bottom) {
                 QualityExplanationView(reason: reason)
             }
@@ -173,7 +173,7 @@ private struct QualityExplanationView: View {
     let reason: AudioQualityUnavailableReason
 
     private var title: String {
-        reason == .noPlaybackEvidence ? "关于“高质量”" : "为什么没有音质信息？"
+        reason == .noPlaybackEvidence ? L10n.text(.qualityInfoTitle) : L10n.text(.whyNoQualityInfo)
     }
 
     var body: some View {
@@ -185,7 +185,7 @@ private struct QualityExplanationView: View {
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
             if reason == .accessibilityPermissionRequired {
-                Button("打开系统设置") {
+                Button(L10n.text(.openSystemSettings)) {
                     AccessibilitySettingsOpener.open()
                 }
             }

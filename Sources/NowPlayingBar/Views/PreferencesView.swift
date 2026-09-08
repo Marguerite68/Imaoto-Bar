@@ -34,16 +34,23 @@ struct PreferencesView: View {
             }
         }
         .frame(width: 540, height: 500)
+        .environment(\.locale, settings.language.locale)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Picker("设置页面", selection: $selectedTab) {
+                Picker(
+                    L10n.text(.preferences, language: settings.language),
+                    selection: $selectedTab
+                ) {
                     ForEach(PreferencesTab.allCases) { tab in
-                        Text(tab.title).tag(tab)
+                        Text(tab.title(language: settings.language)).tag(tab)
                     }
                 }
                 .labelsHidden()
                 .pickerStyle(.segmented)
                 .frame(width: 210)
+                // AppKit retains toolbar items between SwiftUI body updates.
+                // A language-specific identity replaces the cached segmented control.
+                .id(settings.language)
             }
         }
     }
@@ -56,11 +63,11 @@ private enum PreferencesTab: CaseIterable, Identifiable {
 
     var id: Self { self }
 
-    var title: String {
+    func title(language: AppLanguage) -> String {
         switch self {
-        case .display: "显示"
-        case .general: "通用"
-        case .about: "关于"
+        case .display: L10n.text(.display, language: language)
+        case .general: L10n.text(.general, language: language)
+        case .about: L10n.text(.about, language: language)
         }
     }
 }
@@ -101,8 +108,8 @@ private struct DisplayPreferencesView: View {
 
     var body: some View {
         Form {
-            Section("菜单栏显示") {
-                Picker("显示内容", selection: $settings.displayMode) {
+            Section(L10n.text(.menuBarDisplay)) {
+                Picker(L10n.text(.displayContent), selection: $settings.displayMode) {
                     ForEach(MenuBarDisplayMode.allCases) { mode in
                         VStack(alignment: .leading) {
                             Text(mode.displayName)
@@ -116,11 +123,11 @@ private struct DisplayPreferencesView: View {
                 .pickerStyle(.radioGroup)
 
                 Toggle(
-                    "未读取到媒体时隐藏图标",
+                    L10n.text(.hideWhenNoMedia),
                     isOn: $settings.hideStatusItemWhenNoMedia
                 )
 
-                Picker("字体粗细", selection: $settings.fontWeight) {
+                Picker(L10n.text(.fontWeight), selection: $settings.fontWeight) {
                     ForEach(MenuBarFontWeight.allCases) { weight in
                         Text(weight.displayName).tag(weight)
                     }
@@ -128,9 +135,9 @@ private struct DisplayPreferencesView: View {
                 .pickerStyle(.segmented)
             }
 
-            Section("滚动显示") {
+            Section(L10n.text(.scrollingDisplay)) {
                 HStack(spacing: 8) {
-                    Text("显示字符数限制")
+                    Text(L10n.text(.maximumCharacters))
                         .font(.body)
                     Spacer(minLength: 16)
 
@@ -162,22 +169,27 @@ private struct DisplayPreferencesView: View {
                 .controlSize(.small)
 
                 Text(
-                    "可设置范围：\(MarqueeSettingRange.minimumCharacters)–\(MarqueeSettingRange.maximumCharacters) 个字符"
+                    String(
+                        format: L10n.text(.characterRange),
+                        locale: settings.language.locale,
+                        MarqueeSettingRange.minimumCharacters,
+                        MarqueeSettingRange.maximumCharacters
+                    )
                 )
                 .font(.caption)
                 .foregroundColor(isMaximumCharactersInputValid ? .secondary : .red)
 
-                Toggle("超过显示字符数限制时自动滚动", isOn: $settings.scrollingEnabled)
+                Toggle(L10n.text(.autoScroll), isOn: $settings.scrollingEnabled)
 
                 if settings.scrollingEnabled {
-                    Picker("滚动模式", selection: $settings.marqueeMode) {
+                    Picker(L10n.text(.scrollingMode), selection: $settings.marqueeMode) {
                         ForEach(MarqueeMode.allCases) { mode in
                             Text(mode.displayName).tag(mode)
                         }
                     }
                     .pickerStyle(.segmented)
 
-                    LabeledContent("滚动速度") {
+                    LabeledContent(L10n.text(.scrollingSpeed)) {
                         HStack(spacing: 6) {
                             Image(systemName: "tortoise.fill")
                                 .foregroundStyle(.secondary)
@@ -196,9 +208,9 @@ private struct DisplayPreferencesView: View {
                 }
             }
 
-            Section("音质识别") {
+            Section(L10n.text(.qualityRecognition)) {
                 Toggle(
-                    "显示Apple Music音质",
+                    L10n.text(.showAppleMusicQuality),
                     isOn: Binding(
                         get: { settings.audioQualityRecognitionEnabled },
                         set: { enabled in
@@ -211,12 +223,12 @@ private struct DisplayPreferencesView: View {
                 )
 
                 if settings.audioQualityRecognitionEnabled {
-                    Text("为保证识别稳定性，开启后建议保持Apple Music处于前台或最小化状态。")
+                    Text(L10n.text(.qualityRecognitionHint))
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
                     if audioQualityManager.unavailableReason == .accessibilityPermissionRequired {
-                        Button("打开辅助功能设置") {
+                        Button(L10n.text(.openAccessibilitySettings)) {
                             AccessibilitySettingsOpener.open()
                         }
                         .controlSize(.small)
@@ -224,7 +236,7 @@ private struct DisplayPreferencesView: View {
                 }
             }
 
-            Section("效果预览") {
+            Section(L10n.text(.preview)) {
                 HStack(spacing: 6) {
                     Image(systemName: previewPresentation.iconName)
                     if !previewPresentation.title.isEmpty {
@@ -243,13 +255,13 @@ private struct DisplayPreferencesView: View {
                 .padding(.vertical, 7)
                 .background(.quaternary, in: RoundedRectangle(cornerRadius: 7))
 
-                Text("设置会立即应用到菜单栏")
+                Text(L10n.text(.settingsApplyImmediately))
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
                 if mediaInfo == nil {
                     Label(
-                        "当前未读取到 Music 或 Spotify。请确认播放器正在运行，并允许 ImaotoBar 使用“自动化”权限。",
+                        L10n.text(.noMediaWarning),
                         systemImage: "exclamationmark.triangle"
                     )
                     .font(.caption)
@@ -334,9 +346,15 @@ private struct GeneralPreferencesView: View {
 
     var body: some View {
         Form {
-            Section("通用") {
+            Section(L10n.text(.general)) {
+                Picker(L10n.text(.language), selection: $settings.language) {
+                    ForEach(AppLanguage.allCases) { language in
+                        Text(language.displayName).tag(language)
+                    }
+                }
+
                 Toggle(
-                    "开机自启",
+                    L10n.text(.launchAtLogin),
                     isOn: Binding(
                         get: { launchAtLoginManager.isEnabled },
                         set: { launchAtLoginManager.setEnabled($0) }
@@ -350,7 +368,7 @@ private struct GeneralPreferencesView: View {
                 }
             }
 
-            Section("媒体识别优先级") {
+            Section(L10n.text(.mediaPriority)) {
                 List {
                     ForEach(
                         Array(settings.mediaSourcePriority.enumerated()),
@@ -379,7 +397,7 @@ private struct GeneralPreferencesView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
                 .frame(height: CGFloat(settings.mediaSourcePriority.count) * 32)
 
-                Text("拖动调整顺序。多个播放器状态相同时，将优先识别排在上方的平台。")
+                Text(L10n.text(.mediaPriorityHint))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -407,7 +425,7 @@ private struct MediaSourcePriorityRow: View {
             Spacer()
 
             if applicationURL == nil {
-                Text("未安装")
+                Text(L10n.text(.notInstalled))
                     .font(.caption2)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal, 6)
@@ -476,9 +494,9 @@ private struct AboutPreferencesView: View {
                 .foregroundStyle(.tint)
             Text("ImaotoBar")
                 .font(.title2.weight(.semibold))
-            Text("Version 0.1.0")
+            Text("Version 0.1.1")
                 .foregroundStyle(.secondary)
-            Text("原生、轻量的 macOS 菜单栏媒体信息工具")
+            Text(L10n.text(.appDescription))
                 .font(.callout)
                 .foregroundStyle(.secondary)
 
@@ -487,8 +505,8 @@ private struct AboutPreferencesView: View {
                     .frame(width: 24, height: 24)
             }
             .buttonStyle(.borderless)
-            .help("在 GitHub 中打开仓库")
-            .accessibilityLabel("在 GitHub 中打开 ImaotoBar 仓库")
+            .help(L10n.text(.openRepository))
+            .accessibilityLabel(L10n.text(.openRepository))
 
             (Text("Made with ") + Text("❤️") + Text(" by Marguerite"))
                 .font(.callout)

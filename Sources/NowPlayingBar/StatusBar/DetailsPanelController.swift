@@ -59,11 +59,12 @@ final class DetailsPanelController: NSObject {
         panel.level = .popUpMenu
         panel.collectionBehavior = [.transient, .stationary, .fullScreenAuxiliary]
 
-        sizeCancellable = Publishers.CombineLatest(
+        sizeCancellable = Publishers.CombineLatest3(
             manager.$mediaInfo,
-            settings.$audioQualityRecognitionEnabled
+            settings.$audioQualityRecognitionEnabled,
+            settings.$language
         )
-        .map { mediaInfo, recognitionEnabled in
+        .map { mediaInfo, recognitionEnabled, _ in
             DetailsPanelLayout.contentSize(
                 for: mediaInfo,
                 recognitionEnabled: recognitionEnabled
