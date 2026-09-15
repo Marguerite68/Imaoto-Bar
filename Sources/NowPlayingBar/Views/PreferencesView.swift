@@ -486,15 +486,19 @@ private struct AboutPreferencesView: View {
     private let repositoryURL = URL(
         string: "https://github.com/Marguerite68/Imaoto-Bar"
     )!
+    private let version = Bundle.main.object(
+        forInfoDictionaryKey: "CFBundleShortVersionString"
+    ) as? String ?? "—"
 
     var body: some View {
         VStack(spacing: 12) {
-            Image(systemName: "music.note.list")
-                .font(.system(size: 44))
-                .foregroundStyle(.tint)
+            Image(nsImage: NSApp.applicationIconImage)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 64, height: 64)
             Text("ImaotoBar")
                 .font(.title2.weight(.semibold))
-            Text("Version 0.1.1")
+            Text("Version \(version)")
                 .foregroundStyle(.secondary)
             Text(L10n.text(.appDescription))
                 .font(.callout)
