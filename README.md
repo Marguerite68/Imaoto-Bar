@@ -67,6 +67,8 @@ Apple Music 音质识别默认关闭。启用后，还需要在“系统设置 �
 
 首次使用时，请根据系统提示授予 ImaotoBar 所需的“自动化”权限；如启用 Apple Music 音质识别，还需授予“辅助功能”权限。
 
+测试版尚无 Apple 开发者签名，首次打开会被系统拦截：到「系统设置 → 隐私与安全性」，在底部点「仍要打开」，再安装一次。
+
 ---
 
 ## 开发
@@ -91,11 +93,9 @@ build/debug/ImaotoBar.app
 ./scripts/build-app.sh debug
 ```
 
-项目使用 `scripts/build-app.sh` 作为构建入口，不依赖 Swift Package Manager。`SwiftToolchainOverlay.yaml` 仅用于兼容部分 Command Line Tools 环境，不会修改系统工具链。
-
 ---
 
-## 开发与反馈
+## 反馈
 
 欢迎通过 [Issue](https://github.com/Marguerite68/Imaoto-Bar/issues) 提交问题、功能建议或兼容性反馈。
 
